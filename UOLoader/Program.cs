@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -101,6 +102,7 @@ namespace UOLoader
 
             Console.WriteLine("Wcisnij ENTER aby zaczac gre");
             Console.ReadKey();
+            Process.Start(Path.Combine(_settings.LocalUltimaPath, "Test-DMR", "client_dmr.exe"));
         }
 
         static void LoadConfig() {
