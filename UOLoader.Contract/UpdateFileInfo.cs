@@ -7,6 +7,7 @@ namespace UOLoader.Contract
     public class UpdateFileInfo
     {
         public string Name { get; set; }
+        public string TargetName { get; set; }
         public string Uri { get; set; }
         public int Revision { get; set; }
         public bool RequiresUnzip { get; set; }

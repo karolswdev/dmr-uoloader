@@ -57,12 +57,60 @@ namespace UOLoader.Communication
         public async Task<bool> UnzipFile(FileInfo file, ProgressBar pBar, string destFileName) {
 
             var fullPath = Path.Combine(_settings.LocalUltimaPath, destFileName);
-            throw new NotImplementedException();
+
+            if (!File.Exists(fullPath))
+            {
+                return false;
+            }
+
+            pBar.Tick($"Rozpakowywanie {destFileName}");
+            var targetDirectory = _settings.LocalUltimaPath;
+            var zip = new FastZip();
+            zip.ExtractZip(fullPath, targetDirectory, null);
+            return true;
         }
 
         public async Task<bool> DownloadFile(UpdateFileInfo file, ProgressBar pBar, string destFileName) {
+
+            
             var fullPath = Path.Combine(_settings.LocalUltimaPath, destFileName);
-            throw new NotImplementedException();
+            var uri = file.Uri;
+
+            using (var response = _httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).Result)
+            {
+                response.EnsureSuccessStatusCode();
+
+                using (Stream contentStream = await response.Content.ReadAsStreamAsync(), fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
+                {
+                    var totalRead = 0L;
+                    var totalReads = 0L;
+                    var buffer = new byte[8192];
+                    var isMoreToRead = true;
+
+                    do
+                    {
+                        var read = await contentStream.ReadAsync(buffer, 0, buffer.Length);
+                        if (read == 0)
+                        {
+                            isMoreToRead = false;
+                        }
+                        else
+                        {
+                            await fileStream.WriteAsync(buffer, 0, read);
+
+                            totalRead += read;
+                            totalReads += 1;
+
+                            if (totalReads % 800 == 0)
+                            {
+                                pBar.Tick();
+                            }
+                        }
+                    }
+                    while (isMoreToRead);
+                }
+            }
+            return true;
         }
 
         public async Task<bool> DownloadUo(UpdatePayload payload, ProgressBar pbar) {

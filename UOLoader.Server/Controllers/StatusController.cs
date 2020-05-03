@@ -51,7 +51,7 @@ namespace UOLoader.Server.Controllers
 
             var files = _context.UpdateFiles.Select(p => new UpdateFileInfo() {
                 AssociatedMessage = p.AssociatedMessage, Name = p.Name, Revision = p.Revision, SizeInKb = p.SizeInKb,
-                RequiresUnzip = p.RequiresUnzip, Uri = UrlHelper.GetFullUrl(p.RelativeUri, p.Revision)
+                RequiresUnzip = p.RequiresUnzip, Uri = UrlHelper.GetFullUrl(p.RelativeUri, p.Revision), TargetName = p.TargetName
             });
 
             responseMessage.UpdateFiles = files.ToList();

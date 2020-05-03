@@ -42,7 +42,8 @@ namespace UOLoader.Server.Services
                                 Name = parts.Name,
                                 RelativeUri = parts.RelativeUri,
                                 Revision = parts.Revision,
-                                SizeInKb = parts.SizeInKb
+                                SizeInKb = parts.SizeInKb,
+                                TargetName = parts.Name
                             });
                         }
                     }

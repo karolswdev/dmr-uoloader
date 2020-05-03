@@ -13,6 +13,5 @@ namespace UOLoader.Server.Helpers
             return $"{config["BASE_URL"]}/api/download/{name}/{revision}";
         }
 
-        public static 
     }
 }
