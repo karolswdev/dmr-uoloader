@@ -21,7 +21,7 @@ namespace UOLoader
         static async Task Main(string[] args)
         {
             Console.WriteLine(FiggleFonts.Ogre.Render($"UO Loader {AppInfo.Version}"));
-            Console.WriteLine(FiggleFonts.Ogre.Render("by karolswdev"));
+            Console.WriteLine("by karolswdev");
             LoadConfig();
             ConsoleHelper.WriteLine($"UO Loader version {AppInfo.Version} - {DateTime.Now}");
             ConsoleHelper.WriteLine($"Proudly serving {_settings.ShardName} - {_settings.ShardDescription}");
@@ -33,8 +33,8 @@ namespace UOLoader
                 ProgressCharacter = '#',
                 ProgressBarOnBottom = true,
                 BackgroundColor = ConsoleColor.DarkGray,
-                ForegroundColor = ConsoleColor.Green,
-                ForegroundColorDone = ConsoleColor.Red
+                ForegroundColor = ConsoleColor.DarkGreen,
+                ForegroundColorDone = ConsoleColor.Green
             };
 
             UpdatePayload payload;
@@ -100,9 +100,13 @@ namespace UOLoader
                 }
             }
 
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Wcisnij ENTER aby zaczac gre");
             Console.ReadKey();
-            Process.Start(Path.Combine(_settings.LocalUltimaPath, "Test-DMR", "client_dmr.exe"));
+
+            var processInfo = new ProcessStartInfo(Path.Combine(_settings.LocalUltimaPath, "TEST-DMR", "client_dmr.exe"));
+            processInfo.WorkingDirectory = Path.Combine(_settings.LocalUltimaPath, "TEST-DMR");
+            Process.Start(processInfo);
         }
 
         static void LoadConfig() {

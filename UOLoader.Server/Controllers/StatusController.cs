@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using UOLoader.Contract;
 using UOLoader.Server.Data;
 using UOLoader.Server.Entities;
@@ -17,13 +19,27 @@ namespace UOLoader.Server.Controllers
     public class StatusController
     {
         private readonly UoLoaderContext _context;
+        private readonly IHttpContextAccessor _accessor;
+        private readonly ILogger<StatusController> _logger;
 
-        public StatusController(UoLoaderContext context) {
+        public StatusController(UoLoaderContext context, IHttpContextAccessor accessor, ILogger<StatusController> logger) {
             _context = context;
+            _accessor = accessor;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index() {
+
+            var log = new Log();
+            log.HostName = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            log.When = DateTime.Now;
+            log.LogText = "Status endpoint hit";
+            log.IpAddress = log.HostName;
+            _context.Logs.Add(log);
+            _context.SaveChanges();
+
+            _logger.LogInformation("Status being requested");
 
             var config = new ConfigurationBuilder().AddEnvironmentVariables().Build();
             if (String.IsNullOrEmpty(config["SECRET_PASSWORD"])) {
@@ -34,7 +50,7 @@ namespace UOLoader.Server.Controllers
 
             if (settings == null) {
                 var newSettings = new Settings() {
-                    MessageOfTheDay = "Welcome to our shard!",
+                    MessageOfTheDay = "Ultima DMR wita!",
                     RelativeUoUri = "uo.zip",
                     UoSizeInKb = 800000
                 };
