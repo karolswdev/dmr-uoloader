@@ -86,6 +86,7 @@ namespace UOLoader.Communication
                     var totalReads = 0L;
                     var buffer = new byte[8192];
                     var isMoreToRead = true;
+                    var percentage = 0;
 
                     do
                     {
@@ -101,10 +102,17 @@ namespace UOLoader.Communication
                             totalRead += read;
                             totalReads += 1;
 
-                            if (totalReads % 800 == 0)
+                            var percentageTotal =
+                                (int)Math.Round(
+                                    ((decimal)totalRead / (file.SizeInKb * 10)), 0);
+
+
+                            if (percentageTotal > percentage)
                             {
                                 pBar.Tick();
+                                percentage = percentageTotal;
                             }
+
                         }
                     }
                     while (isMoreToRead);
@@ -130,8 +138,11 @@ namespace UOLoader.Communication
                 {
                     var totalRead = 0L;
                     var totalReads = 0L;
+                    var total = payload.FullUltimaOnlineDownloadWeightInKb * 100L;
                     var buffer = new byte[8192];
                     var isMoreToRead = true;
+
+                    var percentage = 0;
 
                     do
                     {
@@ -147,9 +158,14 @@ namespace UOLoader.Communication
                             totalRead += read;
                             totalReads += 1;
 
-                            if (totalReads % 800 == 0)
-                            {
+                            var percentageTotal =
+                                (int) Math.Round(
+                                    ((decimal) totalRead / (payload.FullUltimaOnlineDownloadWeightInKb * 10)), 0);
+
+
+                            if (percentageTotal > percentage) {
                                 pbar.Tick();
+                                percentage = percentageTotal;
                             }
                         }
                     }

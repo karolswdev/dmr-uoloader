@@ -90,7 +90,11 @@ namespace UOLoader
                 using (var pbar = new ProgressBar(payload.UpdateFiles.Count * 2, "Pobieranie plikow zmian", options)) {
                     foreach (var file in payload.UpdateFiles) {
                         if (!fileCache.HasFile(file)) {
-                            await updater.DownloadFile(file, pbar, _settings.LocalUltimaPath);
+                            var result = await updater.DownloadFile(file, pbar, _settings.LocalUltimaPath);
+                            if (result) {
+                                fileCache.AddFile(file, file.TargetName);
+                                fileCache.Save();
+                            }
                             if (file.RequiresUnzip) {
                                 var downloadedFile = Path.Combine(_settings.LocalUltimaPath, file.TargetName);
                                 await updater.UnzipFile(new FileInfo(downloadedFile), pbar, file.TargetName);
